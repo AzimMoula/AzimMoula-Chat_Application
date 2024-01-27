@@ -1,6 +1,6 @@
-# csi_stream
+# Chat_Application
+A chat application made using flutter and stream chat.
 
-A new Flutter project.
 
 ## Getting Started
 
