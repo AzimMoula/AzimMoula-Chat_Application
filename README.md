@@ -1,5 +1,5 @@
 # Chat_Application
-A chat application made using flutter and stream chat.
+A chat application made using flutter and Stream chat.
 
 
 ## Getting Started
