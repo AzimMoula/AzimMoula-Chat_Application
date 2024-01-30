@@ -1,3 +1,5 @@
+import 'package:csi_stream/screens/channel_info.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 
@@ -9,7 +11,13 @@ class Chat extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const StreamChannelHeader(),
+      appBar: StreamChannelHeader(
+        onImageTap: () {
+          Navigator.of(context).push(CupertinoPageRoute(
+            builder: (context) => const ChannelInfo(),
+          ));
+        },
+      ),
       body: Column(
         children: <Widget>[
           Expanded(

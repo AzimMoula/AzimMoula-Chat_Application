@@ -1,3 +1,5 @@
+import 'package:camera/camera.dart';
+import 'package:csi_stream/screens/cam.dart';
 import 'package:csi_stream/screens/chat.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -56,7 +58,13 @@ class _HomeState extends State<Home> {
             backgroundColor: const Color.fromRGBO(31, 44, 52, 1),
             actions: [
               IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.of(context).push(
+                    CupertinoPageRoute(
+                      builder: (context) => const CameraApp(),
+                    ),
+                  );
+                },
                 icon: const Icon(
                   Icons.camera_alt_outlined,
                   color: Colors.white,

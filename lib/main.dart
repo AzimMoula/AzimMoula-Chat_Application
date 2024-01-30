@@ -1,3 +1,4 @@
+import 'package:csi_stream/screens/cam.dart';
 import 'package:csi_stream/screens/home.dart';
 import 'package:csi_stream/screens/login.dart';
 import 'package:flutter/material.dart';
@@ -6,9 +7,11 @@ import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 void main() async {
   final client = StreamChatClient('pgngfnbpjdf2', logLevel: Level.INFO);
 
-  const userid = 'test_user_1';
-  await client.connectUser(User(id: userid),
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoidGVzdF91c2VyXzEifQ.4jGXnMAJEGh3l_TVjPHKMNQsupfxkvi0wDvnrEZmkX8');
+  const userid = 'super_mario';
+
+  final user = await client.connectUser(
+      User(image: 'https://getstream.io/image.png', id: userid),
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoic3VwZXJfbWFyaW8ifQ.IatYviAiHGJGPz4TFgJVb92e1Rui9flwZvAWC5EDpkM');
 
   final channel =
       client.channel('messaging', id: '1c3ac39d-2b41-4da6-a22d-62bcb60df9f8');
@@ -39,7 +42,6 @@ class MyApp extends StatelessWidget {
       title: 'Stream Chat CSI',
       theme: ThemeData(
         scaffoldBackgroundColor: const Color.fromRGBO(18, 27, 34, 1),
-        brightness: Brightness.light,
         colorScheme: ColorScheme.fromSeed(
           seedColor: const Color.fromRGBO(0, 168, 132, 1),
         ),
@@ -61,6 +63,7 @@ class MyApp extends StatelessWidget {
       routes: {
         '/home': (context) => const Home(),
         '/sign-in': (context) => Login(),
+        '/camera': (context) => const CameraApp(),
       },
     );
   }

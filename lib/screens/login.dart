@@ -6,6 +6,8 @@ import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 
 class Login extends StatelessWidget {
   Login({super.key});
+  final TextEditingController _name = TextEditingController();
+  final TextEditingController _imgurl = TextEditingController();
   final TextEditingController _username = TextEditingController();
   final TextEditingController _password = TextEditingController();
   final appBarHeight = AppBar().preferredSize.height;
@@ -112,6 +114,53 @@ class Login extends StatelessWidget {
                   padding: const EdgeInsets.all(50.0),
                   child: Column(
                     children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          IconButton.filled(
+                              onPressed: () => showDialog<String>(
+                                    context: context,
+                                    builder: (BuildContext context) => Dialog(
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(10.0),
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: <Widget>[
+                                            CustomTextInput(
+                                                controller: _imgurl,
+                                                icon: const Icon(
+                                                    Icons.image_rounded),
+                                                isObscure: false,
+                                                hint: "Enter image url"),
+                                            const SizedBox(height: 15),
+                                            TextButton(
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                              },
+                                              child: const Text('Close'),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                              icon: const Padding(
+                                padding: EdgeInsets.all(8.0),
+                                child: Icon(Icons.image, size: 30),
+                              )),
+                          CustomTextInput(
+                              controller: _name,
+                              icon: const Icon(
+                                Icons.person,
+                                color: Colors.white,
+                                size: 40,
+                              ),
+                              isObscure: false,
+                              hint: "Enter your Name"),
+                        ],
+                      ),
                       CustomTextInput(
                           controller: _username,
                           icon: const Icon(
