@@ -1,67 +1,60 @@
-import 'package:csi_stream/screens/home.dart';
-import 'package:csi_stream/screens/login.dart';
 import 'package:flutter/material.dart';
-import 'package:stream_chat_flutter/stream_chat_flutter.dart';
+import 'package:stream_video_flutter/stream_video_flutter.dart';
 
-void main() async {
-  final client = StreamChatClient('pgngfnbpjdf2', logLevel: Level.INFO);
+Future<void> main() async {
+  // Ensure Flutter is able to communicate with Plugins
+  WidgetsFlutterBinding.ensureInitialized();
 
-  const userid = 'test_user_1';
-  await client.connectUser(User(id: userid),
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoidGVzdF91c2VyXzEifQ.4jGXnMAJEGh3l_TVjPHKMNQsupfxkvi0wDvnrEZmkX8');
+    // Initialize Stream video and set the API key along with the user for our app.
+  final client = StreamVideo(
+    'pefx27yhuzzs',
+    user: User.regular(userId: 'hello', name: 'abdullah'),
+    userToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiaGVsbG8ifQ.D0UsX7ACBspeOoaGwL7FUJZ5PoHwlm9pS-3hNTC4uwk',
+    options: const StreamVideoOptions(
+      logPriority: Priority.info,
+    ),
+  );
 
-  final channel =
-      client.channel('messaging', id: '1c3ac39d-2b41-4da6-a22d-62bcb60df9f8');
-
-  await channel.watch();
-
-  runApp(
-    MyApp(
-      client: client,
-      channel: channel,
+  // Set up our call object
+  final call = client.makeCall(type: 'default', id: '345');
+  await call.getOrCreate();
+  // Connect to the call we created
+  await call.join();
+  final outputDevices = RtcMediaDeviceNotifier.instance.audioOutputs();
+  final inputDevices = RtcMediaDeviceNotifier.instance.audioInputs();
+  // final videoDevices = RtcMediaDeviceNotifier.instance.videoInputs();
+  call.setAudioInputDevice(inputDevices as RtcMediaDevice);
+  call.setAudioOutputDevice(outputDevices as RtcMediaDevice);
+  call.setMicrophoneEnabled(enabled: true);
+  call.setCameraEnabled(enabled: true);
+   runApp(
+    MaterialApp(
+      home: MyApp(
+        call: call,
+      ),
+      debugShowCheckedModeBanner: false,
     ),
   );
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({
-    super.key,
-    required this.client,
-    required this.channel,
-  });
+  const MyApp({Key? key, required this.call}) : super(key: key);
 
-  final StreamChatClient client;
-  final Channel channel;
+  final Call call;
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Stream Chat CSI',
-      theme: ThemeData(
-        scaffoldBackgroundColor: const Color.fromRGBO(18, 27, 34, 1),
-        brightness: Brightness.light,
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color.fromRGBO(0, 168, 132, 1),
+      home: Directionality(
+        textDirection: TextDirection.ltr, // or TextDirection.rtl based on your app's language direction
+        child: Scaffold(
+          
+          body: StreamCallContainer(
+            call: call,
+           
+          ),
         ),
-        useMaterial3: true,
       ),
-      builder: (context, widget) {
-        return StreamChat(
-          client: client,
-          streamChatThemeData: StreamChatThemeData(
-              colorTheme: StreamColorTheme.dark(),
-              channelHeaderTheme: const StreamChannelHeaderThemeData(
-                color: Color.fromRGBO(31, 44, 52, 1),
-              )),
-          child: widget,
-        );
-      },
-      debugShowCheckedModeBanner: false,
-      home: Login(),
-      routes: {
-        '/home': (context) => const Home(),
-        '/sign-in': (context) => Login(),
-      },
     );
   }
 }

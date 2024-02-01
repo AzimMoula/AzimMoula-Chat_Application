@@ -1,6 +1,6 @@
-# Chat_Application
-A chat application made using flutter and Stream chat.
+# vid_app
 
+A new Flutter project.
 
 ## Getting Started
 

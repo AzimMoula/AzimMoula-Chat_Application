@@ -7,17 +7,13 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-
-import 'package:csi_stream/main.dart';
-import 'package:stream_chat_flutter/stream_chat_flutter.dart';
+import 'package:vid_app/main.dart';
 
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
     // Build our app and trigger a frame.
-    await tester.pumpWidget(MyApp(
-      client: StreamChatClient('pgngfnbpjdf2', logLevel: Level.INFO),
-      channel: StreamChatClient('pgngfnbpjdf2', logLevel: Level.INFO)
-          .channel('messaging', id: '1c3ac39d-2b41-4da6-a22d-62bcb60df9f8'),
+    await tester.pumpWidget(DemoAppHome(
+      call: call,
     ));
 
     // Verify that our counter starts at 0.
