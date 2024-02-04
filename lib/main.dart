@@ -5,23 +5,25 @@ import 'package:flutter/material.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
   final client = StreamChatClient('pgngfnbpjdf2', logLevel: Level.INFO);
 
-  const userid = 'super_mario';
+  const nameid = 'Super Mario';
+  const userid = 'super_mario_og';
 
-  final user = await client.connectUser(
-      User(image: 'https://getstream.io/image.png', id: userid),
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoic3VwZXJfbWFyaW8ifQ.IatYviAiHGJGPz4TFgJVb92e1Rui9flwZvAWC5EDpkM');
-
-  final channel =
-      client.channel('messaging', id: '1c3ac39d-2b41-4da6-a22d-62bcb60df9f8');
-
-  await channel.watch();
+  await client.connectUser(
+      User(
+          name: nameid,
+          role: 'admin',
+          image:
+              'https://th.bing.com/th/id/OIP.XL9QyTVGCBSVwhEM6Cy9KAAAAA?rs=1&pid=ImgDetMain',
+          id: userid),
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoic3VwZXJfbWFyaW9fb2cifQ.ffMcvt7Afz6khYJG0RG21YmH1Ez1ddWxwA4mGMem0ss');
 
   runApp(
     MyApp(
       client: client,
-      channel: channel,
     ),
   );
 }
@@ -30,11 +32,9 @@ class MyApp extends StatelessWidget {
   const MyApp({
     super.key,
     required this.client,
-    required this.channel,
   });
 
   final StreamChatClient client;
-  final Channel channel;
 
   @override
   Widget build(BuildContext context) {
@@ -44,6 +44,7 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: const Color.fromRGBO(18, 27, 34, 1),
         colorScheme: ColorScheme.fromSeed(
           seedColor: const Color.fromRGBO(0, 168, 132, 1),
+          brightness: Brightness.dark,
         ),
         useMaterial3: true,
       ),
@@ -51,7 +52,16 @@ class MyApp extends StatelessWidget {
         return StreamChat(
           client: client,
           streamChatThemeData: StreamChatThemeData(
+              channelPreviewTheme: const StreamChannelPreviewThemeData(
+                  titleStyle: TextStyle(color: Colors.white)),
+              brightness: Brightness.dark,
+              textTheme: StreamTextTheme.dark(),
               colorTheme: StreamColorTheme.dark(),
+              messageListViewTheme: const StreamMessageListViewThemeData(
+                backgroundColor: Color.fromRGBO(18, 27, 34, 1),
+                // backgroundImage: DecorationImage(image: )
+              ),
+              messageInputTheme: const StreamMessageInputThemeData(),
               channelHeaderTheme: const StreamChannelHeaderThemeData(
                 color: Color.fromRGBO(31, 44, 52, 1),
               )),

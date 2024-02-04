@@ -16,8 +16,6 @@ void main() {
     // Build our app and trigger a frame.
     await tester.pumpWidget(MyApp(
       client: StreamChatClient('pgngfnbpjdf2', logLevel: Level.INFO),
-      channel: StreamChatClient('pgngfnbpjdf2', logLevel: Level.INFO)
-          .channel('messaging', id: '1c3ac39d-2b41-4da6-a22d-62bcb60df9f8'),
     ));
 
     // Verify that our counter starts at 0.

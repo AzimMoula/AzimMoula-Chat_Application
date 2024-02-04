@@ -6,16 +6,22 @@ import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 class Chat extends StatelessWidget {
   const Chat({
     super.key,
+    required this.channel,
   });
+
+  final Channel channel;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: StreamChannelHeader(
         onImageTap: () {
-          Navigator.of(context).push(CupertinoPageRoute(
-            builder: (context) => const ChannelInfo(),
-          ));
+          Navigator.of(context).push(CupertinoPageRoute(builder: (context) {
+            return StreamChannel(
+              channel: channel,
+              child: ChannelInfo(channel: channel),
+            );
+          }));
         },
       ),
       body: Column(
@@ -50,7 +56,7 @@ class _ThreadPageState extends State<ThreadPage> {
   late final _controller = StreamMessageInputController(
     message: Message(parentId: widget.parent?.id),
   );
-
+  
   @override
   void dispose() {
     _controller.dispose();
@@ -71,6 +77,7 @@ class _ThreadPageState extends State<ThreadPage> {
             ),
           ),
           StreamMessageInput(
+            mentionAllAppUsers: true,
             messageInputController: _controller,
           ),
         ],

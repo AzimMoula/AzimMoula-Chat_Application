@@ -14,7 +14,7 @@ class Login extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double widthDev = MediaQuery.of(context).size.width;
+    // double widthDev = MediaQuery.of(context).size.width;
     double heightDev = MediaQuery.of(context).size.height;
 
     return DefaultTabController(
@@ -30,28 +30,22 @@ class Login extends StatelessWidget {
               style: TextStyle(color: Colors.white),
             ),
             backgroundColor: const Color.fromRGBO(31, 44, 52, 1),
-            bottom: TabBar(
-              dividerColor: const Color.fromRGBO(31, 44, 52, 1),
+            bottom: const TabBar(
+              dividerColor: Color.fromRGBO(31, 44, 52, 1),
               indicatorSize: TabBarIndicatorSize.tab,
-              indicatorColor: const Color.fromRGBO(0, 168, 132, 1),
+              indicatorColor: Color.fromRGBO(0, 168, 132, 1),
               tabAlignment: TabAlignment.center,
               tabs: <Widget>[
-                SizedBox(
-                  width: widthDev / 10,
-                  child: const Tab(
-                    child: Text(
-                      "Sign In",
-                      style: TextStyle(fontWeight: FontWeight.w900),
-                    ),
+                Tab(
+                  child: Text(
+                    "Sign In",
+                    style: TextStyle(fontWeight: FontWeight.w900),
                   ),
                 ),
-                SizedBox(
-                  width: widthDev / 10,
-                  child: const Tab(
-                    child: Text(
-                      "Sign Up",
-                      style: TextStyle(fontWeight: FontWeight.w900),
-                    ),
+                Tab(
+                  child: Text(
+                    "Sign Up",
+                    style: TextStyle(fontWeight: FontWeight.w900),
                   ),
                 ),
               ],
@@ -114,13 +108,15 @@ class Login extends StatelessWidget {
                   padding: const EdgeInsets.all(50.0),
                   child: Column(
                     children: [
-                      Row(
+                      Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           IconButton.filled(
                               onPressed: () => showDialog<String>(
                                     context: context,
                                     builder: (BuildContext context) => Dialog(
+                                      backgroundColor:
+                                          const Color.fromRGBO(18, 27, 34, 1),
                                       child: Padding(
                                         padding: const EdgeInsets.all(10.0),
                                         child: Column(
@@ -131,7 +127,9 @@ class Login extends StatelessWidget {
                                             CustomTextInput(
                                                 controller: _imgurl,
                                                 icon: const Icon(
-                                                    Icons.image_rounded),
+                                                  Icons.image_rounded,
+                                                  color: Colors.white,
+                                                ),
                                                 isObscure: false,
                                                 hint: "Enter image url"),
                                             const SizedBox(height: 15),
