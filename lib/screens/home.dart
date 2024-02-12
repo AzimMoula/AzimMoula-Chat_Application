@@ -8,7 +8,9 @@ import 'package:csi_stream/widgets/custom_text_input.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
+import 'package:stream_video_flutter/stream_video_flutter.dart' as sv;
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -21,12 +23,6 @@ class _HomeState extends State<Home> {
   var appBarHeight = AppBar().preferredSize.height;
   final TextEditingController _channelname = TextEditingController();
   final TextEditingController _searchdata = TextEditingController();
-  Future<void> _refresh() {
-    return Future.delayed(
-      const Duration(seconds: 2),
-    );
-  }
-
   final List members = [];
   late final _listController = StreamChannelListController(
     client: StreamChat.of(context).client,
@@ -436,28 +432,106 @@ class _HomeState extends State<Home> {
                   style: TextStyle(color: Colors.white),
                 ),
               ),
-              RefreshIndicator(
-                triggerMode: RefreshIndicatorTriggerMode.onEdge,
-                onRefresh: _refresh,
-                child: StreamChannelListView(
-                  controller: _listController,
-                  onChannelLongPress: (channel) => showChannelInfoBottomSheet(
-                      backgroundColor: const Color.fromRGBO(31, 44, 52, 1),
-                      context: context,
-                      channel: channel),
-                  // },
-                  onChannelTap: (channel) {
-                    Navigator.of(context).push(
-                      CupertinoPageRoute(
-                        builder: (context) {
-                          return StreamChannel(
-                            channel: channel,
-                            child: Chat(channel: channel),
-                          );
+              SlidableAutoCloseBehavior(
+                child: RefreshIndicator(
+                  triggerMode: RefreshIndicatorTriggerMode.onEdge,
+                  onRefresh: _listController.refresh,
+                  child: StreamChannelListView(
+                    controller: _listController,
+                    itemBuilder: (context, channels, index, tile) {
+                      final channel = channels[index];
+                      final chatTheme = StreamChatTheme.of(context);
+                      final backgroundColor = chatTheme.colorTheme.inputBg;
+                      final canDeleteChannel = channel.ownCapabilities
+                          .contains(PermissionType.deleteChannel);
+                      return Slidable(
+                        groupTag: 'channels-actions',
+                        startActionPane: ActionPane(
+                          extentRatio: 0.40,
+                          motion: const BehindMotion(),
+                          children: [
+                            CustomSlidableAction(
+                              backgroundColor: backgroundColor,
+                              child: const Icon(CupertinoIcons.archivebox_fill),
+                              onPressed: (_) {},
+                            ),
+                            CustomSlidableAction(
+                              onPressed: (_) {},
+                              backgroundColor: backgroundColor,
+                              child: const Icon(CupertinoIcons.pin_fill),
+                            ),
+                          ],
+                        ),
+                        endActionPane: ActionPane(
+                          extentRatio: canDeleteChannel ? 0.40 : 0.20,
+                          motion: const BehindMotion(),
+                          children: [
+                            CustomSlidableAction(
+                              onPressed: (_) {
+                                showChannelInfoModalBottomSheet(
+                                  context: context,
+                                  channel: channel,
+                                  onViewInfoTap: () {
+                                    Navigator.pop(context);
+                                    // Navigate to info screen
+                                  },
+                                );
+                              },
+                              backgroundColor: backgroundColor,
+                              child: const Icon(Icons.more_horiz),
+                            ),
+                            if (canDeleteChannel)
+                              CustomSlidableAction(
+                                backgroundColor: backgroundColor,
+                                child: StreamSvgIcon.delete(
+                                  color: chatTheme.colorTheme.accentError,
+                                ),
+                                onPressed: (_) async {
+                                  final res = await showConfirmationBottomSheet(
+                                    context,
+                                    title: 'Delete Conversation',
+                                    question:
+                                        'Are you sure you want to delete this conversation?',
+                                    okText: 'Delete',
+                                    cancelText: 'Cancel',
+                                    icon: StreamSvgIcon.delete(
+                                      color: chatTheme.colorTheme.accentError,
+                                    ),
+                                  );
+                                  if (res == true) {
+                                    await _listController
+                                        .deleteChannel(channel);
+                                  }
+                                },
+                              ),
+                          ],
+                        ),
+                        child: tile,
+                      );
+                    },
+                    onChannelLongPress: (channel) {
+                      showChannelInfoModalBottomSheet(
+                        context: context,
+                        channel: channel,
+                        onViewInfoTap: () {
+                          Navigator.pop(context);
+                          // Navigate to info screen
                         },
-                      ),
-                    );
-                  },
+                      );
+                    },
+                    onChannelTap: (channel) {
+                      Navigator.of(context).push(
+                        CupertinoPageRoute(
+                          builder: (context) {
+                            return StreamChannel(
+                              channel: channel,
+                              child: Chat(channel: channel),
+                            );
+                          },
+                        ),
+                      );
+                    },
+                  ),
                 ),
               ),
               const Center(
@@ -466,29 +540,83 @@ class _HomeState extends State<Home> {
                   style: TextStyle(color: Colors.white),
                 ),
               ),
-              ListView(
-                children: [
-                  ListTile(
-                      onTap: () {},
-                      title: const Text('Create call link',
-                          style: TextStyle(color: Colors.white)),
-                      subtitle: const Text(
-                          "Share a link for your WhatsApp call",
-                          style: TextStyle(
-                              color: Color.fromRGBO(108, 121, 129, 1))),
-                      leading: const CircleAvatar(
-                        backgroundColor: Color.fromRGBO(0, 168, 132, 1),
-                        child: IconButton.filled(
-                          onPressed: null,
-                          icon: Icon(
-                            Icons.link,
-                            color: Colors.black,
+              StreamUserListView(
+                onUserTap: (User user) async {
+                  const nameid = 'Super Mario';
+                  const userid = 'super_mario_og';
+
+                  final vclient = sv.StreamVideo(
+                    'pgngfnbpjdf2',
+                    user: const sv.User(
+                        info: sv.UserInfo(
+                            id: userid,
+                            name: nameid,
+                            image:
+                                'https://th.bing.com/th/id/OIP.XL9QyTVGCBSVwhEM6Cy9KAAAAA?rs=1&pid=ImgDetMain')),
+                    userToken:
+                        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoic3VwZXJfbWFyaW9fb2cifQ.ffMcvt7Afz6khYJG0RG21YmH1Ez1ddWxwA4mGMem0ss',
+                    options: const sv.StreamVideoOptions(
+                      logPriority: sv.Priority.info,
+                    ),
+                  );
+                  // Set up our call object
+                  final call = vclient.makeCall(type: 'default', id: '345');
+                  await call.getOrCreate(
+                      ringing: true,
+                      notify: true,
+                      memberIds: [
+                        StreamChat.of(context).currentUser!.id,
+                        user.id
+                      ]);
+                  // Connect to the call we created
+                  await call.join();
+                  sv.StreamVideo.instance.onCallKitEvent((event) {
+                    if (event == sv.CallStatusOutgoing) {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => sv.StreamCallContainer(
+                            call: call,
                           ),
-                          color: Color.fromRGBO(0, 168, 132, 1),
                         ),
-                      )),
-                ],
+                      );
+                    }
+                  });
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => sv.StreamCallContainer(
+                        call: call,
+                      ),
+                    ),
+                  );
+                },
+                controller: StreamUserListController(
+                  client: StreamChat.of(context).client,
+                  filter: Filter.and(
+                    [
+                      Filter.notEqual(
+                          'id', StreamChat.of(context).currentUser!.id)
+                    ],
+                  ),
+                ),
               ),
+              ListTile(
+                  onTap: () {},
+                  title: const Text('Create call link',
+                      style: TextStyle(color: Colors.white)),
+                  subtitle: const Text("Share a link for your WhatsApp call",
+                      style:
+                          TextStyle(color: Color.fromRGBO(108, 121, 129, 1))),
+                  leading: const CircleAvatar(
+                    backgroundColor: Color.fromRGBO(0, 168, 132, 1),
+                    child: IconButton.filled(
+                      onPressed: null,
+                      icon: Icon(
+                        Icons.link,
+                        color: Colors.black,
+                      ),
+                      color: Color.fromRGBO(0, 168, 132, 1),
+                    ),
+                  )),
             ],
           ),
         ),

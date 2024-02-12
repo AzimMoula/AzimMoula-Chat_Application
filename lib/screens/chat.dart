@@ -15,6 +15,7 @@ class Chat extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: StreamChannelHeader(
+        showBackButton: true,
         onImageTap: () {
           Navigator.of(context).push(CupertinoPageRoute(builder: (context) {
             return StreamChannel(
@@ -56,7 +57,7 @@ class _ThreadPageState extends State<ThreadPage> {
   late final _controller = StreamMessageInputController(
     message: Message(parentId: widget.parent?.id),
   );
-  
+
   @override
   void dispose() {
     _controller.dispose();

@@ -3,22 +3,29 @@ import 'package:csi_stream/screens/home.dart';
 import 'package:csi_stream/screens/login.dart';
 import 'package:flutter/material.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
+import 'package:stream_chat_persistence/stream_chat_persistence.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  final chatPersistentClient = StreamChatPersistenceClient(
+    logLevel: Level.INFO,
+    connectionMode: ConnectionMode.background,
+  );
+
   final client = StreamChatClient('pgngfnbpjdf2', logLevel: Level.INFO);
 
-  const nameid = 'Super Mario';
+  // const nameid = 'Super Mario';
   const userid = 'super_mario_og';
 
   await client.connectUser(
       User(
-          name: nameid,
+          // name: nameid,
           role: 'admin',
           image:
               'https://th.bing.com/th/id/OIP.XL9QyTVGCBSVwhEM6Cy9KAAAAA?rs=1&pid=ImgDetMain',
-          id: userid),
+          id: userid,
+          extraData: const {'description': 'Hey there, I am using ChatHub'}),
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoic3VwZXJfbWFyaW9fb2cifQ.ffMcvt7Afz6khYJG0RG21YmH1Ez1ddWxwA4mGMem0ss');
 
   runApp(
@@ -63,8 +70,8 @@ class MyApp extends StatelessWidget {
               ),
               messageInputTheme: const StreamMessageInputThemeData(),
               channelHeaderTheme: const StreamChannelHeaderThemeData(
-                color: Color.fromRGBO(31, 44, 52, 1),
-              )),
+                  // color: Color.fromRGBO(31, 44, 52, 1),
+                  )),
           child: widget,
         );
       },

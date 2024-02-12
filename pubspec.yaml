@@ -48,6 +48,9 @@ dependencies:
   video_player: ^2.8.2
   flutter_slidable: ^3.0.1
   gap: ^3.0.1
+  stream_chat_persistence: ^6.10.0
+  fluentui_system_icons: ^1.1.225
+  stream_video_push_notification: ^0.3.1
 
 dev_dependencies:
   flutter_test:

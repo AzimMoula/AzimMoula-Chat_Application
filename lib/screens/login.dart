@@ -83,7 +83,7 @@ class Login extends StatelessWidget {
                           onPressed: () {
                             // final userid = _username.text;
 
-                            Navigator.pushNamed(context, '/home');
+                            Navigator.pushReplacementNamed(context, '/home');
                             // * Navigate to Home Screen
                           },
                           style: const ButtonStyle(
@@ -181,7 +181,7 @@ class Login extends StatelessWidget {
                         padding: const EdgeInsets.all(10.0),
                         child: ElevatedButton(
                           onPressed: () {
-                            Navigator.pushNamed(context, '/home');
+                            Navigator.pushReplacementNamed(context, '/home');
                           },
                           style: const ButtonStyle(
                               backgroundColor: MaterialStatePropertyAll(

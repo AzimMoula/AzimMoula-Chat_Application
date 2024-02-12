@@ -1,5 +1,4 @@
 import 'package:csi_stream/screens/chat.dart';
-import 'package:csi_stream/widgets/custom_text_input.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';

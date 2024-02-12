@@ -1,4 +1,3 @@
-import 'package:csi_stream/widgets/custom_text_input.dart';
 import 'package:flutter/material.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 
@@ -64,38 +63,53 @@ class ChannelInfo extends StatelessWidget {
               Navigator.pop(context);
               Navigator.pop(context);
             },
-            onDeleteConversationTap: () => showDialog<String>(
-              context: context,
-              barrierColor: const Color.fromRGBO(155, 10, 10, 0.5),
-              builder: (BuildContext context) => Dialog(
-                child: Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      const SizedBox(height: 15),
-                      const Text(
-                        "Do you really want to delete this Chat?!\nThis can't be undone!",
-                        style: TextStyle(
-                          color: Colors.red,
-                        ),
-                      ),
-                      const SizedBox(height: 15),
-                      TextButton(
-                        onPressed: () {
-                          channel.delete();
-                          Navigator.pop(context);
-                          Navigator.pop(context);
-                          Navigator.pop(context);
-                        },
-                        child: const Text('DELETE'),
-                      ),
-                    ],
-                  ),
+            onDeleteConversationTap: () async {
+              final res = await showConfirmationBottomSheet(
+                context,
+                title: 'Delete Conversation',
+                question: 'Are you sure you want to delete this conversation?',
+                okText: 'Delete',
+                cancelText: 'Cancel',
+                icon: StreamSvgIcon.delete(
+                  color: StreamChatTheme.of(context).colorTheme.accentError,
                 ),
-              ),
-            ),
+              );
+              if (res == true) {
+                await channel.delete();
+              }
+            },
+            // () => showDialog<String>(
+            //   context: context,
+            //   barrierColor: const Color.fromRGBO(155, 10, 10, 0.5),
+            //   builder: (BuildContext context) => Dialog(
+            //     child: Padding(
+            //       padding: const EdgeInsets.all(20.0),
+            //       child: Column(
+            //         mainAxisSize: MainAxisSize.min,
+            //         mainAxisAlignment: MainAxisAlignment.center,
+            //         children: <Widget>[
+            //           const SizedBox(height: 15),
+            //           const Text(
+            //             "Do you really want to delete this Chat?!\nThis can't be undone!",
+            //             style: TextStyle(
+            //               color: Colors.red,
+            //             ),
+            //           ),
+            //           const SizedBox(height: 15),
+            //           TextButton(
+            //             onPressed: () {
+            //               channel.delete();
+            //               Navigator.pop(context);
+            //               Navigator.pop(context);
+            //               Navigator.pop(context);
+            //             },
+            //             child: const Text('DELETE'),
+            //           ),
+            //         ],
+            //       ),
+            //     ),
+            //   ),
+            // ),
           ),
         ],
       ),
