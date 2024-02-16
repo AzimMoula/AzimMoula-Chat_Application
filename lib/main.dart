@@ -20,12 +20,12 @@ void main() async {
 
   await client.connectUser(
       User(
-          // name: nameid,
-          role: 'admin',
-          image:
-              'https://th.bing.com/th/id/OIP.XL9QyTVGCBSVwhEM6Cy9KAAAAA?rs=1&pid=ImgDetMain',
-          id: userid,
-          extraData: const {'description': 'Hey there, I am using ChatHub'}),
+        // name: nameid,
+        role: 'admin',
+        image:
+            'https://th.bing.com/th/id/OIP.XL9QyTVGCBSVwhEM6Cy9KAAAAA?rs=1&pid=ImgDetMain',
+        id: userid,
+      ),
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoic3VwZXJfbWFyaW9fb2cifQ.ffMcvt7Afz6khYJG0RG21YmH1Ez1ddWxwA4mGMem0ss');
 
   runApp(

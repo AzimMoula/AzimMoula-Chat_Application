@@ -13,6 +13,7 @@ class Profile extends StatelessWidget {
                 .currentUser!
                 .extraData['name']
                 .toString()));
+
     return SafeArea(
         child: Scaffold(
       appBar: AppBar(
@@ -66,7 +67,6 @@ class Profile extends StatelessWidget {
                           StreamChat.of(context).currentUser!.id,
                           set: <String, Object?>{'name': _username.text},
                         );
-                        
                       },
                     ),
                     const Divider(),
@@ -118,6 +118,12 @@ class Description extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final TextEditingController _description = TextEditingController.fromValue(
+        TextEditingValue(
+            text: StreamChat.of(context)
+                .currentUser!
+                .extraData['description']
+                .toString()));
     return Scaffold(
         appBar: AppBar(
           leading: IconButton(
@@ -131,10 +137,13 @@ class Description extends StatelessWidget {
         body: Padding(
           padding: const EdgeInsets.all(15.0),
           child: TextFormField(
-            initialValue: StreamChat.of(context)
-                .currentUser!
-                .extraData['description']
-                .toString(),
+            controller: _description,
+            onEditingComplete: () {
+              StreamChat.of(context).client.partialUpdateUser(
+                StreamChat.of(context).currentUser!.id,
+                set: <String, Object?>{'description': _description.text},
+              );
+            },
             maxLength: 139,
             decoration: const InputDecoration(border: OutlineInputBorder()),
           ),
